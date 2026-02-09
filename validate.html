@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Validation...</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+  </style>
+</head>
+<body>
+  <h1>Validation en cours...</h1>
+  <p>Veuillez patienter.</p>
+  <script>
+    // Récupère l'ID de la demande depuis l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestId = urlParams.get('id');
+
+    if (requestId) {
+      // Stocke la validation pour cette demande
+      localStorage.setItem(`validated_${requestId}`, 'true');
+      console.log(`Demande ${requestId} validée.`);
+      document.body.innerHTML = `<h1>✅ Demande validée !</h1><p>Vous pouvez fermer cet onglet.</p>`;
+    } else {
+      document.body.innerHTML = `<h1>❌ Erreur</h1><p>ID de demande manquant.</p>`;
+    }
+  </script>
+</body>
+</html>

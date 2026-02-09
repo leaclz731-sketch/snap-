@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Vérification OTP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 Code de vérification</h2>
+    <p>Entrez le code à 4 chiffres que l'administrateur vous a fourni.</p>
+    <form id="otpForm">
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" maxlength="1" pattern="\d" inputmode="numeric" required>
+        <input type="text" maxlength="1" pattern="\d" inputmode="numeric" required>
+      </div>
+      <button type="submit">Valider</button>
+    </form>
+    <p id="error-message" style="color: red; margin-top: 15px; display: none;">Code incorrect. Veuillez réessayer.</p>
+  </div>
+
+  <script>
+    const inputs = document.querySelectorAll

