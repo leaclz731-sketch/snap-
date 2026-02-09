@@ -149,7 +149,7 @@ button:disabled {
 #error-message, #status-message {
   color: var(--error-red);
   font-weight: 600;
-  display: block; /* S'assure que le message est visible */
+  display: block;
 }
 
 #status-message.success {
